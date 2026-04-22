@@ -15,7 +15,24 @@ export default function AdminPage() {
 
   useEffect(() => {
     const saved = localStorage.getItem("admin_token");
-    if (saved) { setToken(saved); setIsAuthed(true); }
+    if (!saved) return;
+    // Re-verify saved token on mount — if it fails, clear it and show login
+    setToken(saved);
+    fetch("/api/fetch-tools", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${saved}`, "Content-Type": "application/json" },
+      body: "{}",
+    }).then((res) => {
+      if (res.ok) {
+        setIsAuthed(true);
+      } else {
+        localStorage.removeItem("admin_token");
+        setToken("");
+      }
+    }).catch(() => {
+      localStorage.removeItem("admin_token");
+      setToken("");
+    });
   }, []);
 
   async function login(e: React.FormEvent) {
@@ -119,10 +136,26 @@ export default function AdminPage() {
     );
   }
 
+  function logout() {
+    localStorage.removeItem("admin_token");
+    setToken("");
+    setIsAuthed(false);
+    setStep(1);
+    setTools(null);
+    setNewsletter(null);
+    setNewsletterId(null);
+    setMessage("");
+  }
+
   // Pipeline UI
   return (
     <main className="min-h-screen p-8 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-8">Newsletter Pipeline</h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-bold">Newsletter Pipeline</h1>
+        <button onClick={logout} className="text-sm text-gray-400 hover:text-gray-600 underline">
+          Logout
+        </button>
+      </div>
 
       {/* Step 1 */}
       <div className="border rounded-lg p-6 mb-4">
