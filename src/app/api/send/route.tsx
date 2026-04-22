@@ -51,7 +51,10 @@ export async function POST(req: NextRequest) {
     const { data: subscribers, error: subError } = await supabase
       .from("subscribers")
       .select("email")
-      .eq("active", true);
+      .eq("active", true) as unknown as {
+        data: { email: string }[] | null;
+        error: { message: string } | null;
+      };
 
     if (subError) {
       console.error("[send] subscriber fetch error:", subError);
@@ -78,7 +81,7 @@ export async function POST(req: NextRequest) {
         batch.map((sub) =>
           resend.emails.send({
             from,
-            to: [sub.email as string],
+            to: [sub.email],
             subject,
             html,
           }),
@@ -98,6 +101,10 @@ export async function POST(req: NextRequest) {
 
     if (updateError) {
       console.error("[send] update error:", updateError);
+      return NextResponse.json(
+        { error: "Failed to record send" },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json({ ok: true, sent });
