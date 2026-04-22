@@ -15,8 +15,8 @@ export const env = createEnv({
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
-    NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).optional(),
+    NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
@@ -26,12 +26,10 @@ export const env = createEnv({
   emptyStringAsUndefined: true,
 });
 
-export const hasSupabaseConfig = Boolean(
-  env.NEXT_PUBLIC_SUPABASE_URL && env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-);
+// All Supabase vars are now required — these are always true at runtime.
+export const hasSupabaseConfig = true;
 
-export const hasSupabaseServiceRole =
-  hasSupabaseConfig && Boolean(env.SUPABASE_SERVICE_ROLE_KEY);
+export const hasSupabaseServiceRole = true;
 
 // Re-export for clarity — key is now required
 export const supabaseServiceRoleKey = env.SUPABASE_SERVICE_ROLE_KEY;
