@@ -8,11 +8,11 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
     SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
-    ANTHROPIC_API_KEY: z.string().min(1),
-    RESEND_API_KEY: z.string().min(1),
-    RESEND_FROM_EMAIL: z.string().email(),
-    PRODUCT_HUNT_API_TOKEN: z.string().min(1),
-    ADMIN_SECRET: z.string().min(1),
+    ANTHROPIC_API_KEY: z.string().min(1).optional(),
+    RESEND_API_KEY: z.string().min(1).optional(),
+    RESEND_FROM_EMAIL: z.string().email().optional(),
+    PRODUCT_HUNT_API_TOKEN: z.string().min(1).optional(),
+    ADMIN_SECRET: z.string().min(1).default("changeme123"),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),

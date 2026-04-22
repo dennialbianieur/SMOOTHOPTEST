@@ -18,6 +18,10 @@ const QUERY = `{
 }`;
 
 export async function fetchProductHunt(): Promise<RawTool[]> {
+  if (!process.env.PRODUCT_HUNT_API_TOKEN) {
+    console.warn("[fetchProductHunt] PRODUCT_HUNT_API_TOKEN not set, skipping");
+    return [];
+  }
   try {
     const res = await fetch("https://api.producthunt.com/v2/api/graphql", {
       method: "POST",

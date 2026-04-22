@@ -3,7 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { getISOWeek, format } from "date-fns";
 import type { RawTool, Newsletter } from "./types";
 
-const client = new Anthropic();
+const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const SYSTEM_PROMPT = `You are an expert AI tools curator with deep knowledge of the developer ecosystem, machine learning research, and emerging software products.
 
