@@ -6,7 +6,12 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+    SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+    ANTHROPIC_API_KEY: z.string().min(1),
+    RESEND_API_KEY: z.string().min(1),
+    RESEND_FROM_EMAIL: z.string().email(),
+    PRODUCT_HUNT_API_TOKEN: z.string().min(1),
+    ADMIN_SECRET: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
@@ -27,3 +32,6 @@ export const hasSupabaseConfig = Boolean(
 
 export const hasSupabaseServiceRole =
   hasSupabaseConfig && Boolean(env.SUPABASE_SERVICE_ROLE_KEY);
+
+// Re-export for clarity — key is now required
+export const supabaseServiceRoleKey = env.SUPABASE_SERVICE_ROLE_KEY;
